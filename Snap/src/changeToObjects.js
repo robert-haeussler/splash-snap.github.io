@@ -1,3 +1,5 @@
+modules.changeToObjects = '2018-December-18';
+
 SpriteBubbleMorph.prototype.dataAsMorph = function (data, toggle) {
     var contents,
         isTable,
@@ -54,11 +56,10 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data, toggle) {
         contents.silentSetWidth(data.width);
         contents.silentSetHeight(data.height);
         contents.image = data;
-    } else if (data instanceof List || data instanceof Dict) {
+    } else if (data instanceof List || (data instanceof Dict)) {
 	var isDict = data instanceof Dict;
         if (toggle && this.contentsMorph) {
-	    isTable = (this.contentsMorph instanceof ListWatcherMorph ||
-		       this.contentsMorph instanceof DictWatcherMorph);
+	    isTable = (this.contentsMorph instanceof ListWatcherMorph);
         } else {
 	    isTable = data.isTable();
         }
@@ -73,7 +74,7 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data, toggle) {
                 ));
 	    }
         } else {
-	    contents = (idDict?new ListWatcherMorph(data):
+	    contents = (isDict?new ListWatcherMorph(data):
 			new DictWatcherMorph(data));
 	    contents.update(true);
 	    contents.step = contents.update;
@@ -1156,7 +1157,7 @@ SpriteMorph.prototype.initBlocks = function () {
 	    spec: 'value at %s of %l',
 	    defaults: [localize('key')]
 	},
-	deReplaceDictItem: {
+	deReplaceDictValue: {
 	    type: 'command',
 	    category: 'lists',
 	    spec: 'replace value at %s of %l with %s',
@@ -1746,7 +1747,7 @@ SpriteMorph.prototype.blockTemplates = function (category) {
 	blocks.push('-');
 	blocks.push(block('reportDictValue'));
 	blocks.push(block('reportDictPairsCount'));
-	blocks.push(block('doReplaceDictItem'));
+	blocks.push(block('doReplaceDictValue'));
 	blocks.push('-');
 	blocks.push(block('reportDictKeys'));
 	blocks.push(block('reportDictValues'));
