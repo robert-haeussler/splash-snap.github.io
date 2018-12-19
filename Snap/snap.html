@@ -3,17 +3,19 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Snap! Build Your Own Blocks 4.2.2.10 - dev -</title>
-        <link rel="shortcut icon" href="src/favicon.ico">
+        <link rel="shortcut icon" href="src/favicon.ico">	   
         <script type="text/javascript" src="src/morphic.js?version=2018-10-02"></script>
         <script type="text/javascript" src="src/widgets.js?version=2018-10-02"></script>
         <script type="text/javascript" src="src/blocks.js?version=2018-11-13"></script>
+	<script type="text/javascript" src="src/changeToBlocks.js?version=2018-12-18"></script> <!--change set-->
         <script type="text/javascript" src="src/threads.js?version=2018-10-26"></script>
         <script type="text/javascript" src="src/objects.js?version=2018-11-28"></script>
-	<script type="text/javascript" src="src/changeToObjects.js"></script>
+	<script type="text/javascript" src="src/changeToObjects.js?version=2018-12-18"></script> <!--change set-->
         <script type="text/javascript" src="src/gui.js?version=2018-12-07"></script>
         <script type="text/javascript" src="src/paint.js?version=2018-10-02"></script>
         <script type="text/javascript" src="src/lists.js?version=2018-10-02"></script>
         <script type="text/javascript" src="src/byob.js?version=2018-11-12"></script>
+	<script type="text/javascript" src="src/changesToByob?version=2018-12-18"></script> <!--change set-->
         <script type="text/javascript" src="src/tables.js?version=2018-10-02"></script>
         <script type="text/javascript" src="src/symbols.js?version=2018-10-02"></script>
         <script type="text/javascript" src="src/sketch.js?version=2018-10-02"></script>
@@ -30,7 +32,7 @@
                 world.worldCanvas.focus();
                 new IDE_Morph().openIn(world);
                 loop();
-			};
+	    };
             function loop() {
                 requestAnimationFrame(loop);
                 world.doOneCycle();
