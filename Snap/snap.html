@@ -17,7 +17,7 @@
         <script type="text/javascript" src="src/lists.js?version=2018-10-02"></script>
 	<script type="text/javascript" src="src/dicts.js?version=2018-12-18"></script> <!--new-->
         <script type="text/javascript" src="src/byob.js?version=2018-11-12"></script>
-	<script type="text/javascript" src="src/changesToByob?version=2018-12-18"></script> <!--change set-->
+	<script type="text/javascript" src="src/changeToByob?version=2018-12-18"></script> <!--change set-->
         <script type="text/javascript" src="src/tables.js?version=2018-10-02"></script>
         <script type="text/javascript" src="src/symbols.js?version=2018-10-02"></script>
         <script type="text/javascript" src="src/sketch.js?version=2018-10-02"></script>
@@ -33,7 +33,7 @@
                 world = new WorldMorph(document.getElementById('world'));
                 world.worldCanvas.focus();
                 new IDE_Morph().openIn(world);
-	        world.isDevMode = true;
+	        world.isDevMode = true;// enable dev mode - for until I finish
                 loop();
 	    };
             function loop() {

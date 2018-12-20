@@ -9,7 +9,7 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data, toggle) {
         scaledImg,
         width;
     if (data instanceof Morph) {
-        if (isSnapObject(data)) {
+        if (isSnapObject(data)) {// means Sprite or Stage, not snap builtin type
 	    img = data.thumbnail(new Point(40, 40));
 	    contents = new Morph();
 	    contents.silentSetWidth(img.width);
@@ -126,7 +126,7 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data, toggle) {
     }
     return contents;
 };
-
+h
 SpriteMorph.prototype.initBlocks = function () {
     SpriteMorph.prototype.blocks = {
 
@@ -1723,6 +1723,18 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push(block('doInsertInList'));
         blocks.push(block('doReplaceInList'));
 
+	// dict blocks (same colour as list blocks)
+	
+	blocks.push('=');
+	blocks.push(block('reportNewDict'));
+	blocks.push('-');
+	blocks.push(block('reportDictValue'));
+	blocks.push(block('reportDictPairsCount'));
+	blocks.push(block('doReplaceDictValue'));
+	blocks.push('-');
+	blocks.push(block('reportDictKeys'));
+	blocks.push(block('reportDictValues'));
+	
 	// for debugging: ///////////////
 
         if (this.world().isDevMode) {
@@ -1739,20 +1751,6 @@ SpriteMorph.prototype.blockTemplates = function (category) {
             blocks.push(block('doForEach'));
             blocks.push(block('doShowTable'));
         }
-
-	// dict blocks (same colour as list blocks)
-	
-	blocks.push('=');
-	blocks.push(block('reportNewDict'));
-	blocks.push('-');
-	blocks.push(block('reportDictValue'));
-	blocks.push(block('reportDictPairsCount'));
-	blocks.push(block('doReplaceDictValue'));
-	blocks.push('-');
-	blocks.push(block('reportDictKeys'));
-	blocks.push(block('reportDictValues'));
-
-    
 
     /////////////////////////////////
 
@@ -1771,4 +1769,704 @@ SpriteMorph.prototype.blockTemplates = function (category) {
 
  	}
     return blocks;
+};
+
+StageMorph.prototype.blockTemplates = function (category) {
+    var blocks = [], myself = this, varNames, button,
+        cat = category || 'motion', txt;
+
+    function block(selector) {
+        if (myself.hiddenPrimitives[selector]) {
+            return null;
+        }
+        var newBlock = SpriteMorph.prototype.blockForSelector(selector, true);
+        newBlock.isTemplate = true;
+        return newBlock;
+    }
+
+    function variableBlock(varName, isLocal) {
+        var newBlock = SpriteMorph.prototype.variableBlock(varName, isLocal);
+        newBlock.isDraggable = false;
+        newBlock.isTemplate = true;
+        return newBlock;
+    }
+
+
+    function watcherToggle(selector) {
+        if (myself.hiddenPrimitives[selector]) {
+            return null;
+        }
+        var info = SpriteMorph.prototype.blocks[selector];
+        return new ToggleMorph(
+            'checkbox',
+            this,
+            function () {
+                myself.toggleWatcher(
+                    selector,
+                    localize(info.spec),
+                    myself.blockColor[info.category]
+                );
+            },
+            null,
+            function () {
+                return myself.showingWatcher(selector);
+            },
+            null
+        );
+    }
+
+    function variableWatcherToggle(varName) {
+        return new ToggleMorph(
+            'checkbox',
+            this,
+            function () {
+                myself.toggleVariableWatcher(varName);
+            },
+            null,
+            function () {
+                return myself.showingVariableWatcher(varName);
+            },
+            null
+        );
+    }
+
+    function addVar(pair) {
+        if (pair) {
+            if (myself.isVariableNameInUse(pair[0])) {
+                myself.inform('that name is already in use');
+            } else {
+                myself.addVariable(pair[0], pair[1]);
+                myself.toggleVariableWatcher(pair[0], pair[1]);
+                myself.blocksCache[cat] = null;
+                myself.paletteCache[cat] = null;
+                myself.parentThatIsA(IDE_Morph).refreshPalette();
+            }
+        }
+    }
+
+    if (cat === 'motion') {
+
+        txt = new TextMorph(localize(
+            'Stage selected:\nno motion primitives'
+        ));
+        txt.fontSize = 9;
+        txt.setColor(this.paletteTextColor);
+        blocks.push(txt);
+        blocks.push('=');
+        blocks.push(this.makeBlockButton(cat));
+
+    } else if (cat === 'looks') {
+
+        blocks.push(block('doSwitchToCostume'));
+        blocks.push(block('doWearNextCostume'));
+        blocks.push(watcherToggle('getCostumeIdx'));
+        blocks.push(block('getCostumeIdx'));
+        blocks.push('-');
+        blocks.push(block('changeEffect'));
+        blocks.push(block('setEffect'));
+        blocks.push(block('clearEffects'));
+        blocks.push('-');
+        blocks.push(block('show'));
+        blocks.push(block('hide'));
+
+    // for debugging: ///////////////
+
+        if (this.world().isDevMode) {
+            blocks.push('-');
+            txt = new TextMorph(localize(
+                'development mode \ndebugging primitives:'
+            ));
+            txt.fontSize = 9;
+            txt.setColor(this.paletteTextColor);
+            blocks.push(txt);
+            blocks.push('-');
+            blocks.push(block('log'));
+            blocks.push(block('alert'));
+            blocks.push('-');
+            blocks.push(block('doScreenshot'));
+        }
+
+    /////////////////////////////////
+
+        blocks.push('=');
+        blocks.push(this.makeBlockButton(cat));
+
+    } else if (cat === 'sound') {
+
+        blocks.push(block('playSound'));
+        blocks.push(block('doPlaySoundUntilDone'));
+        blocks.push(block('doStopAllSounds'));
+        blocks.push('-');
+        blocks.push(block('doRest'));
+        blocks.push(block('doPlayNote'));
+        blocks.push(block('doSetInstrument'));
+        blocks.push('-');
+        blocks.push(block('doChangeTempo'));
+        blocks.push(block('doSetTempo'));
+        blocks.push(watcherToggle('getTempo'));
+        blocks.push(block('getTempo'));
+        blocks.push('=');
+        blocks.push(this.makeBlockButton(cat));
+
+    } else if (cat === 'pen') {
+
+        blocks.push(block('clear'));
+        blocks.push(block('reportPenTrailsAsCostume'));
+        blocks.push('=');
+        blocks.push(this.makeBlockButton(cat));
+
+    } else if (cat === 'control') {
+
+        blocks.push(block('receiveGo'));
+        blocks.push(block('receiveKey'));
+        blocks.push(block('receiveInteraction'));
+        blocks.push(block('receiveCondition'));
+        blocks.push(block('receiveMessage'));
+        blocks.push('-');
+        blocks.push(block('doBroadcast'));
+        blocks.push(block('doBroadcastAndWait'));
+        blocks.push(watcherToggle('getLastMessage'));
+        blocks.push(block('getLastMessage'));
+        blocks.push('-');
+        blocks.push(block('doWarp'));
+        blocks.push('-');
+        blocks.push(block('doWait'));
+        blocks.push(block('doWaitUntil'));
+        blocks.push('-');
+        blocks.push(block('doForever'));
+        blocks.push(block('doRepeat'));
+        blocks.push(block('doUntil'));
+        blocks.push('-');
+        blocks.push(block('doIf'));
+        blocks.push(block('doIfElse'));
+        blocks.push('-');
+        blocks.push(block('doReport'));
+    /*
+    // old STOP variants, migrated to a newer version, now redundant
+        blocks.push(block('doStopBlock'));
+        blocks.push(block('doStop'));
+        blocks.push(block('doStopAll'));
+    */
+        blocks.push(block('doStopThis'));
+    /*
+        // migrated to doStopThis, now redundant
+        blocks.push(block('doStopOthers'));
+    */
+        blocks.push('-');
+        blocks.push(block('doRun'));
+        blocks.push(block('fork'));
+        blocks.push(block('evaluate'));
+        blocks.push('-');
+        blocks.push(block('doTellTo'));
+        blocks.push(block('reportAskFor'));
+        blocks.push('-');
+        blocks.push(block('doCallCC'));
+        blocks.push(block('reportCallCC'));
+        blocks.push('-');
+        blocks.push(block('createClone'));
+        blocks.push(block('newClone'));
+        blocks.push('-');
+        blocks.push(block('doPauseAll'));
+        blocks.push('=');
+        blocks.push(this.makeBlockButton(cat));
+
+    } else if (cat === 'sensing') {
+
+        blocks.push(block('doAsk'));
+        blocks.push(watcherToggle('getLastAnswer'));
+        blocks.push(block('getLastAnswer'));
+        blocks.push('-');
+        blocks.push(watcherToggle('reportMouseX'));
+        blocks.push(block('reportMouseX'));
+        blocks.push(watcherToggle('reportMouseY'));
+        blocks.push(block('reportMouseY'));
+        blocks.push(block('reportMouseDown'));
+        blocks.push('-');
+        blocks.push(block('reportKeyPressed'));
+        blocks.push('-');
+        blocks.push(block('doResetTimer'));
+        blocks.push(watcherToggle('getTimer'));
+        blocks.push(block('getTimer'));
+        blocks.push('-');
+        blocks.push(block('reportAttributeOf'));
+
+        if (SpriteMorph.prototype.enableFirstClass) {
+            blocks.push(block('reportGet'));
+        }
+        blocks.push('-');
+
+        blocks.push(block('reportURL'));
+        blocks.push('-');
+        blocks.push(block('reportIsFastTracking'));
+        blocks.push(block('doSetFastTracking'));
+        blocks.push('-');
+        blocks.push(block('reportDate'));
+
+    // for debugging: ///////////////
+
+        if (this.world().isDevMode) {
+
+            blocks.push('-');
+            txt = new TextMorph(localize(
+                'development mode \ndebugging primitives:'
+            ));
+            txt.fontSize = 9;
+            txt.setColor(this.paletteTextColor);
+            blocks.push(txt);
+            blocks.push('-');
+            blocks.push(watcherToggle('reportThreadCount'));
+            blocks.push(block('reportThreadCount'));
+            blocks.push(block('colorFiltered'));
+            blocks.push(block('reportStackSize'));
+            blocks.push(block('reportFrameCount'));
+        }
+
+    /////////////////////////////////
+
+        blocks.push('=');
+        blocks.push(this.makeBlockButton(cat));
+
+    } else if (cat === 'operators') {
+
+        blocks.push(block('reifyScript'));
+        blocks.push(block('reifyReporter'));
+        blocks.push(block('reifyPredicate'));
+        blocks.push('#');
+        blocks.push('-');
+        blocks.push(block('reportSum'));
+        blocks.push(block('reportDifference'));
+        blocks.push(block('reportProduct'));
+        blocks.push(block('reportQuotient'));
+        blocks.push('-');
+        blocks.push(block('reportModulus'));
+        blocks.push(block('reportRound'));
+        blocks.push(block('reportMonadic'));
+        blocks.push(block('reportRandom'));
+        blocks.push('-');
+        blocks.push(block('reportLessThan'));
+        blocks.push(block('reportEquals'));
+        blocks.push(block('reportGreaterThan'));
+        blocks.push('-');
+        blocks.push(block('reportAnd'));
+        blocks.push(block('reportOr'));
+        blocks.push(block('reportNot'));
+        blocks.push(block('reportBoolean'));
+        blocks.push('-');
+        blocks.push(block('reportJoinWords'));
+        blocks.push(block('reportTextSplit'));
+        blocks.push(block('reportLetter'));
+        blocks.push(block('reportStringSize'));
+        blocks.push('-');
+        blocks.push(block('reportUnicode'));
+        blocks.push(block('reportUnicodeAsLetter'));
+        blocks.push('-');
+        blocks.push(block('reportIsA'));
+        blocks.push(block('reportIsIdentical'));
+
+        if (true) { // (Process.prototype.enableJS) {
+            blocks.push('-');
+            blocks.push(block('reportJSFunction'));
+            if (Process.prototype.enableCompiling) {
+                blocks.push(block('reportCompiled'));
+            }
+        }
+
+    // for debugging: ///////////////
+
+        if (this.world().isDevMode) {
+            blocks.push('-');
+            txt = new TextMorph(
+                'development mode \ndebugging primitives:'
+            );
+            txt.fontSize = 9;
+            txt.setColor(this.paletteTextColor);
+            blocks.push(txt);
+            blocks.push('-');
+            blocks.push(block('reportTypeOf'));
+            blocks.push(block('reportTextFunction'));
+        }
+
+    //////////////////////////////////
+
+        blocks.push('=');
+        blocks.push(this.makeBlockButton(cat));
+
+    } else if (cat === 'variables') {
+
+        button = new PushButtonMorph(
+            null,
+            function () {
+                new VariableDialogMorph(
+                    null,
+                    addVar,
+                    myself
+                ).prompt(
+                    'Variable name',
+                    null,
+                    myself.world()
+                );
+            },
+            'Make a variable'
+        );
+        blocks.push(button);
+
+        if (this.variables.allNames().length > 0) {
+            button = new PushButtonMorph(
+                null,
+                function () {
+                    var menu = new MenuMorph(
+                        myself.deleteVariable,
+                        null,
+                        myself
+                    );
+                    myself.variables.allNames().forEach(function (name) {
+                        menu.addItem(name, name);
+                    });
+                    menu.popUpAtHand(myself.world());
+                },
+                'Delete a variable'
+            );
+            blocks.push(button);
+        }
+
+        blocks.push('-');
+
+        varNames = this.reachableGlobalVariableNames(true);
+        if (varNames.length > 0) {
+            varNames.forEach(function (name) {
+                blocks.push(variableWatcherToggle(name));
+                blocks.push(variableBlock(name));
+            });
+            blocks.push('-');
+        }
+
+        varNames = this.allLocalVariableNames(true);
+        if (varNames.length > 0) {
+            varNames.forEach(function (name) {
+                blocks.push(variableWatcherToggle(name));
+                blocks.push(variableBlock(name, true));
+            });
+            blocks.push('-');
+        }
+
+        blocks.push(block('doSetVar'));
+        blocks.push(block('doChangeVar'));
+        blocks.push(block('doShowVar'));
+        blocks.push(block('doHideVar'));
+        blocks.push(block('doDeclareVariables'));
+        blocks.push('=');
+        blocks.push(block('reportNewList'));
+        blocks.push('-');
+        blocks.push(block('reportCONS'));
+        blocks.push(block('reportListItem'));
+        blocks.push(block('reportCDR'));
+        blocks.push('-');
+        blocks.push(block('reportListLength'));
+        blocks.push(block('reportListContainsItem'));
+        blocks.push('-');
+        blocks.push(block('doAddToList'));
+        blocks.push(block('doDeleteFromList'));
+        blocks.push(block('doInsertInList'));
+        blocks.push(block('doReplaceInList'));
+
+	// dict blocks (same colour as list blocks)
+	
+	blocks.push('=');
+	blocks.push(block('reportNewDict'));
+	blocks.push('-');
+	blocks.push(block('reportDictValue'));
+	blocks.push(block('reportDictPairsCount'));
+	blocks.push(block('doReplaceDictValue'));
+	blocks.push('-');
+	blocks.push(block('reportDictKeys'));
+	blocks.push(block('reportDictValues'));
+	
+	// for debugging: ///////////////
+
+        if (this.world().isDevMode) {
+            blocks.push('-');
+            txt = new TextMorph(localize(
+                'development mode \ndebugging primitives:'
+            ));
+            txt.fontSize = 9;
+            txt.setColor(this.paletteTextColor);
+            blocks.push(txt);
+            blocks.push('-');
+            blocks.push(block('reportMap'));
+            blocks.push('-');
+            blocks.push(block('doForEach'));
+            blocks.push(block('doShowTable'));
+        }
+
+    /////////////////////////////////
+
+        blocks.push('=');
+
+        if (StageMorph.prototype.enableCodeMapping) {
+            blocks.push(block('doMapCodeOrHeader'));
+            blocks.push(block('doMapValueCode'));
+            blocks.push(block('doMapListCode'));
+            blocks.push('-');
+            blocks.push(block('reportMappedCode'));
+            blocks.push('=');
+        }
+
+        blocks.push(this.makeBlockButton());
+    }
+    return blocks;
+};
+
+CellMorph.prototype.isCircular = function (list) {
+    if (!this.parentCell) {return false; }
+    if (list instanceof List || (list instanceof Dict)) {
+        return this.contents === list || this.parentCell.isCircular(list);
+    }
+    return this.parentCell.isCircular(this.contents);
+};
+CellMorph.prototype.drawNew = function (toggle, type) {
+    var context,
+        txt,
+        img,
+        fontSize = SyntaxElementMorph.prototype.fontSize,
+        isSameList = this.contentsMorph instanceof ListWatcherMorph
+                && (this.contentsMorph.list === this.contents),
+        isSameTable = this.contentsMorph instanceof TableFrameMorph
+                && (this.contentsMorph.tableMorph.table === this.contents);
+
+    if (this.isBig) {
+        fontSize = fontSize * 1.5;
+    }
+
+    // re-build my contents
+    if (toggle || (this.contentsMorph && !isSameList && !isSameTable)) {
+        this.contentsMorph.destroy();
+        this.version = null;
+    }
+
+    if (toggle || (!isSameList && !isSameTable)) {
+        if (this.contents instanceof Morph) {
+            if (isSnapObject(this.contents)) {
+                img = this.contents.thumbnail(new Point(40, 40));
+                this.contentsMorph = new Morph();
+                this.contentsMorph.silentSetWidth(img.width);
+                this.contentsMorph.silentSetHeight(img.height);
+                this.contentsMorph.image = img;
+                this.version = this.contents.version;
+            } else {
+                this.contentsMorph = this.contents;
+            }
+        } else if (isString(this.contents)) {
+            txt  = this.contents.length > 500 ?
+                    this.contents.slice(0, 500) + '...' : this.contents;
+            this.contentsMorph = new TextMorph(
+                txt,
+                fontSize,
+                null,
+                true,
+                false,
+                'left' // was formerly 'center', reverted b/c of code-mapping
+            );
+            if (this.isEditable) {
+                this.contentsMorph.isEditable = true;
+                this.contentsMorph.enableSelecting();
+            }
+            this.contentsMorph.setColor(new Color(255, 255, 255));
+        } else if (typeof this.contents === 'boolean') {
+            img = SpriteMorph.prototype.booleanMorph.call(
+                null,
+                this.contents
+            ).fullImage();
+            this.contentsMorph = new Morph();
+            this.contentsMorph.silentSetWidth(img.width);
+            this.contentsMorph.silentSetHeight(img.height);
+            this.contentsMorph.image = img;
+        } else if (this.contents instanceof HTMLCanvasElement) {
+            this.contentsMorph = new Morph();
+            this.contentsMorph.silentSetWidth(this.contents.width);
+            this.contentsMorph.silentSetHeight(this.contents.height);
+            this.contentsMorph.image = this.contents;
+        } else if (this.contents instanceof Context) {
+            img = this.contents.image();
+            this.contentsMorph = new Morph();
+            this.contentsMorph.silentSetWidth(img.width);
+            this.contentsMorph.silentSetHeight(img.height);
+            this.contentsMorph.image = img;
+        } else if (this.contents instanceof Costume) {
+            img = this.contents.thumbnail(new Point(40, 40));
+            this.contentsMorph = new Morph();
+            this.contentsMorph.silentSetWidth(img.width);
+            this.contentsMorph.silentSetHeight(img.height);
+            this.contentsMorph.image = img;
+        } else if (this.contents instanceof Sound) {
+            this.contentsMorph = new SymbolMorph('notes', 30);
+        } else if (this.contents instanceof List ||
+		   (this.contents instanceof Dict)) {
+	    isDict = this.contents instanceof Dict;
+            if ('table' === type || (!toggle && this.contents.isTable())) {
+                this.contentsMorph = new TableFrameMorph(isDict ?
+							 new DictTableMorph(
+							     this.contents,10) :
+							 new TableMorph(
+							     this.contents,
+							     10
+							 ));
+                this.contentsMorph.expand(new Point(200, 150));
+            } else {
+                if (this.isCircular()) {
+                    this.contentsMorph = new TextMorph(
+                        '(...)',
+                        fontSize,
+                        null,
+                        false, // bold
+                        true, // italic
+                        'center'
+                    );
+                    this.contentsMorph.setColor(new Color(255, 255, 255));
+                } else {
+		    if (isDict) {
+			this.contentsMorph = new DictWatcherMorph(
+                            this.contents,
+                            this
+			);
+		    } else {
+			this.contentsMorph = new ListWatcherMorph(
+                            this.contents,
+                            this
+			);
+		    }
+                }
+            }
+            this.contentsMorph.isDraggable = false;
+        } else {
+            this.contentsMorph = new TextMorph(
+                !isNil(this.contents) ? this.contents.toString() : '',
+                fontSize,
+                null,
+                true,
+                false,
+                'center'
+            );
+            if (this.isEditable) {
+                this.contentsMorph.isEditable = true;
+                this.contentsMorph.enableSelecting();
+            }
+            this.contentsMorph.setColor(new Color(255, 255, 255));
+        }
+        this.add(this.contentsMorph);
+    }
+
+    // adjust my layout
+    this.silentSetHeight(this.contentsMorph.height()
+        + this.edge
+        + this.border * 2);
+    this.silentSetWidth(Math.max(
+        this.contentsMorph.width() + this.edge * 2,
+        (this.contents instanceof Context ||
+         this.contents instanceof List ||
+	 this.contents instanceof Dict ? 0 :
+         SyntaxElementMorph.prototype.fontSize * 3.5)
+    ));
+
+    // draw my outline
+    this.image = newCanvas(this.extent());
+    context = this.image.getContext('2d');
+    if ((this.edge === 0) && (this.border === 0)) {
+        BoxMorph.uber.drawNew.call(this);
+        return null;
+    }
+    context.fillStyle = this.color.toString();
+    context.beginPath();
+    this.outlinePath(
+        context,
+        Math.max(this.edge - this.border, 0),
+        this.border
+    );
+    context.closePath();
+    context.fill();
+    if (this.border > 0 && !MorphicPreferences.isFlat) {
+        context.lineWidth = this.border;
+        context.strokeStyle = this.borderColor.toString();
+        context.beginPath();
+        this.outlinePath(context, this.edge, this.border / 2);
+        context.closePath();
+        context.stroke();
+
+        context.shadowOffsetX = this.border;
+        context.shadowOffsetY = this.border;
+        context.shadowBlur = this.border;
+        context.shadowColor = this.color.darker(80).toString();
+        this.drawShadow(context, this.edge, this.border / 2);
+    }
+
+    // position my contents
+    if (toggle || (!isSameList && !isSameTable)) {
+        this.contentsMorph.setCenter(this.center());
+    }
+};
+CellMorph.prototype.layoutChanged = function () {
+    var context,
+        fontSize = SyntaxElementMorph.prototype.fontSize,
+        listWatcher = this.parentThatIsA(ListWatcherMorph);
+
+    if (this.isBig) {
+        fontSize = fontSize * 1.5;
+    }
+
+    // adjust my layout
+    this.silentSetHeight(this.contentsMorph.height()
+        + this.edge
+        + this.border * 2);
+    this.silentSetWidth(Math.max(
+        this.contentsMorph.width() + this.edge * 2,
+        (this.contents instanceof Context ||
+            this.contents instanceof List ? 0 : this.height() * 2)
+    ));
+
+
+    // draw my outline
+    this.image = newCanvas(this.extent());
+    context = this.image.getContext('2d');
+    if ((this.edge === 0) && (this.border === 0)) {
+        BoxMorph.uber.drawNew.call(this);
+        return null;
+    }
+    context.fillStyle = this.color.toString();
+    context.beginPath();
+    this.outlinePath(
+        context,
+        Math.max(this.edge - this.border, 0),
+        this.border
+    );
+    context.closePath();
+    context.fill();
+    if (this.border > 0 && !MorphicPreferences.isFlat) {
+        context.lineWidth = this.border;
+        context.strokeStyle = this.borderColor.toString();
+        context.beginPath();
+        this.outlinePath(context, this.edge, this.border / 2);
+        context.closePath();
+        context.stroke();
+
+        context.shadowOffsetX = this.border;
+        context.shadowOffsetY = this.border;
+        context.shadowBlur = this.border;
+        context.shadowColor = this.color.darker(80).toString();
+        this.drawShadow(context, this.edge, this.border / 2);
+    }
+
+    // position my contents
+    this.contentsMorph.setCenter(this.center());
+
+    if (listWatcher) {
+        listWatcher.fixLayout();
+    }
+};
+CellMorph.prototype.mouseDoubleClick = function (pos) {
+    if (List.prototype.enableTables &&
+        (this.currentValue instanceof List ||
+	 this.curentValue instanceof Dict)) {
+        new TableDialogMorph(this.contents).popUp(this.world());
+    } else {
+        this.escalateEvent('mouseDoubleClick', pos);
+    }
 };
