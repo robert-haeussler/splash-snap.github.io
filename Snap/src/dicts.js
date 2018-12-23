@@ -1,4 +1,4 @@
-modules.dicts = '2018-December-18';
+modules.dicts = '2018-December-22';
 
 // Dict ////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,7 @@ modules.dicts = '2018-December-18';
   I am a hashtable object simelar to the ones native to javascript.
   I use the same .at(key), .put(key, value), .remove(key) and .length() 
   functions as do lists (but not .cons(item), .cdr() and .add(index, val))
-  as well as .keys() and .values() from javascript objects.
+  as well as .keys() and .values() from JavaScript Objects.
 */
 
 function Dict(obj) {
@@ -16,6 +16,10 @@ function Dict(obj) {
 
 Dict.prototype.changed = function () {
     this.lastChanged = Date.now();
+};
+
+Dict.prototype.asString = function () {
+    return 'a Dict [' + this.length() + '] pairs';
 };
 
 Dict.prototype.length = function() {
@@ -84,7 +88,7 @@ Dict.prototype.isTable = function() {
 // DictWatcherMorph inherits from ListWatcherMorph:
 DictWatcherMorph.prototype = new ListWatcherMorph();
 DictWatcherMorph.prototype.constructor = DictWatcherMorph;
-DictWatcherMorph.prototype.uber = ListWatcherMorph.prototype;
+DictWatcherMorph.uber = ListWatcherMorph.prototype;
 function DictWatcherMorph(dict, parentCell) {
     this.init(dict, parentCell);
 }
@@ -354,7 +358,7 @@ DictWatcherMorph.prototype.showTableView = function () {
 // DictTableMorph inherits from TableMorph
 DictTableMorph.prototype = new TableMorph();
 DictTableMorph.prototype.constructor = DictTableMorph;
-DictTableMorph.prototype.uber = TableMorph.prototype
+DictTableMorph.uber = TableMorph.prototype
 function DictTableMorph(
     table,
     // optional parameters below this line
@@ -459,8 +463,8 @@ DictTableMorph.prototype.openInDialog = function () {
 
 DictTableDialogMorph.prototype = new TableDialogMorph();
 DictTableDialogMorph.prototype.constructor = DictTableDialogMorph;
-DictTableDialogMorph.prototype.uber = TableDialogMorph.prototype;
-function TableDialogMorph(data, globalColWidth, colWidths, rowHeight) {
+DictTableDialogMorph.uber = TableDialogMorph.prototype;
+function DictTableDialogMorph(data, globalColWidth, colWidths, rowHeight) {
     this.init(data, globalColWidth, colWidths, rowHeight);
 }
 DictTableDialogMorph.prototype.buildContents = function (

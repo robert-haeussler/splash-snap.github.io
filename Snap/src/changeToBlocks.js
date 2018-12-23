@@ -1,4 +1,4 @@
-modules.changeToBlocks = '2018-December-18';
+modules.changeToBlocks = '2018-December-22';
 
 /*
   new input types:
@@ -6,6 +6,113 @@ modules.changeToBlocks = '2018-December-18';
              expandable list with a minimum of 0 '%txt %x' sections
   %dct     - same as %pair%s but static
 */
+SyntaxElementMorph.prototype.replaceInput = function (oldArg, newArg) {
+    var scripts = this.parentThatIsA(ScriptsMorph),
+        replacement = newArg,
+        idx = this.children.indexOf(oldArg),
+        i = 0;
+
+    // try to find the ArgLabel embedding the newArg,
+    // used for the undrop() feature
+    if (idx === -1 && newArg instanceof MultiArgMorph) {
+        this.children.forEach(function (morph) {
+            if (morph instanceof ArgLabelMorph &&
+                    morph.argMorph() === oldArg) {
+                idx = i;
+            }
+            i += 1;
+        });
+    }
+
+    if ((idx === -1) || (scripts === null)) {
+        return null;
+    }
+
+    if (oldArg.cachedSlotSpec) {oldArg.cachedSlotSpec = null; }
+    if (newArg.cachedSlotSpec) {newArg.cachedSlotSpec = null; }
+
+    this.startLayout();
+    if (newArg.parent) {
+        newArg.parent.removeChild(newArg);
+    }
+    if (oldArg instanceof MultiArgMorph) {
+        oldArg.inputs().forEach(function (inp) { // preserve nested reporters
+            oldArg.replaceInput(inp, new InputSlotMorph());
+        });
+        if (this.dynamicInputLabels) {
+	    if (oldArg instanceof DictArgMorph) {
+		replacement = new ArgLabelMorph(newArg, "input dict: ");
+	    } else {
+		replacement = new ArgLabelMorph(newArg);
+	    }
+        }
+    }
+    replacement.parent = this;
+    this.children[idx] = replacement;
+    if (oldArg instanceof ReporterBlockMorph) {
+        if (!(oldArg instanceof RingMorph)
+                || (oldArg instanceof RingMorph && oldArg.contents())) {
+            scripts.add(oldArg);
+            oldArg.moveBy(replacement.extent());
+            oldArg.fixBlockColor();
+        }
+    }
+    if (replacement instanceof MultiArgMorph
+            || replacement instanceof ArgLabelMorph
+            || replacement.constructor === CommandSlotMorph) {
+        replacement.fixLayout();
+        if (this.fixLabelColor) { // special case for variadic continuations
+            this.fixLabelColor();
+        }
+    } else {
+        replacement.drawNew();
+        this.fixLayout();
+    }
+    this.cachedInputs = null;
+    this.endLayout();
+};
+SyntaxElementMorph.prototype.silentReplaceInput = function (oldArg, newArg) {
+    // used by the Serializer or when programatically
+    // changing blocks
+    var i = this.children.indexOf(oldArg),
+        replacement;
+
+    if (i === -1) {
+        return;
+    }
+
+    if (oldArg.cachedSlotSpec) {oldArg.cachedSlotSpec = null; }
+    if (newArg.cachedSlotSpec) {newArg.cachedSlotSpec = null; }
+
+    if (newArg.parent) {
+        newArg.parent.removeChild(newArg);
+    }
+    if (oldArg instanceof MultiArgMorph && this.dynamicInputLabels) {
+	if (oldArg instanceof DictArgMorph) {
+	    replacement = new ArgLabelMorph(newArg, "input dict: ");
+	} else {
+            replacement = new ArgLabelMorph(newArg);
+	}
+    } else {
+        replacement = newArg;
+    }
+    replacement.parent = this;
+    this.children[i] = replacement;
+
+    if (replacement instanceof MultiArgMorph
+            || replacement instanceof ArgLabelMorph
+            || replacement.constructor === CommandSlotMorph) {
+        replacement.fixLayout();
+        if (this.fixLabelColor) { // special case for variadic continuations
+            this.fixLabelColor();
+        }
+    } else {
+        replacement.drawNew();
+        this.fixLayout();
+    }
+    this.cachedInputs = null;
+};
+
 SyntaxElementMorph.prototype.labelPart = function (spec) {
     var part, tokens;
     if (spec[0] === '%' &&
@@ -845,7 +952,7 @@ DictArgMorph.prototype.addInput = function(key, value) {
     newPart.parent = this;
     this.children.splice(this.children.length-1, 0, newPart);
     newPart.drawNew();
-    DictArgMorph.uber.addInput.call(this, this.slotSpec, value); // the value
+    DictArgMorph.uber.addInput.call(this, value); // the value
 };
 DictArgMorph.prototype.removeInput = function() {
     DictArgMorph.uber.removeInput.call(this);

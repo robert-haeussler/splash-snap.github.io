@@ -1,4 +1,4 @@
-modules.changeToObjects = '2018-December-18';
+modules.changeToObjects = '2018-December-22';
 
 SpriteBubbleMorph.prototype.dataAsMorph = function (data, toggle) {
     var contents,
@@ -126,7 +126,7 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data, toggle) {
     }
     return contents;
 };
-h
+
 SpriteMorph.prototype.initBlocks = function () {
     SpriteMorph.prototype.blocks = {
 
@@ -1157,7 +1157,7 @@ SpriteMorph.prototype.initBlocks = function () {
 	    spec: 'value at %s of %l',
 	    defaults: [localize('key')]
 	},
-	deReplaceDictValue: {
+	doReplaceDictValue: {
 	    type: 'command',
 	    category: 'lists',
 	    spec: 'replace value at %s of %l with %s',

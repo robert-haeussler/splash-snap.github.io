@@ -1,4 +1,4 @@
-modules.changeToThreads = '2018-December-18';
+modules.changeToThreads = '2018-December-22';
 
 Process.prototype.reportTypeOf = function (thing) {
     // answer a string denoting the argument's type
@@ -72,37 +72,26 @@ Process.prototype.reportNewDict = function(dict) {
     return dict;// has already been converted to a dict
 };
 Process.prototype.reportDictValue = function(key, dict) {
-    if (this.reportIsA(dict, 'dict')) {
-	return dict.at(key);
-    } else {
-	throw new Error('expected dict but got ' + this.reportTypeOf(dict));
-    }
+    this.assertType(dict, 'dict');
+    return dict.at(key);
 };
-Proccess.prototype.doReplaceDictValue = function(key, dict, value) {
-    if (this.reportIsA(dict, 'dict')) {
-	return dict.put(key, value);
-    } else {
-	throw new Error('expected dict but got ' + this.reportTypeOf(dict));
-    }
+Process.prototype.doReplaceDictValue = function(key, dict, value) {
+    this.assertType(dict, 'dict');
+    dict.put(key, value);
 };
 Process.prototype.reportPairsCount = function(dict) {
-    if (this.reportIsA(dict, 'dict')) {
-	return dict.length();
-    } else {
-	throw new Error('expected dict but got ' + this.reportTypeOf(dict));
-    }
+    this.assertType(dict, 'dict');
+    return dict.length();
 };
 Process.prototype.reportDictKeys = function(dict) {
-    if (this.reportIsA(dict, 'dict')) {
-	return dict.keys();
-    } else {
-	throw new Error('expected dict but got ' + this.reportTypeOf(dict));
-    }
+    this.assertType(dict, 'dict');
+    var keys = dict.keys();
+    var list = new List(keys);
+    return list;
 };
 Process.prototype.reportDictValues = function(dict) {
-    if (this.reportIsA(dict, 'dict')) {
-	return dict.values();
-    } else {
-	throw new Error('expected dict but got ' + this.reportTypeOf(dict));
-    }
+    this.assertType(dict, 'dict');
+    var values = dict.values();
+    var list = new List(values);
+    return list;
 };

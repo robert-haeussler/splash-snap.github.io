@@ -1,4 +1,4 @@
-modules.changeToByob = '2018-December-18';
+modules.changeToByob = '2018-December-22';
 
 InputSlotDialogMorph.prototype.createSlotTypeButtons = function () {
     // populate my 'slots' area with radio buttons, labels and input fields
