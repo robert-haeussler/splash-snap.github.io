@@ -95,3 +95,61 @@ Process.prototype.reportDictValues = function(dict) {
     var list = new List(values);
     return list;
 };
+Process.prototype.evaluateDictSlot = function (multiSlot, argCount) {
+    // first evaluate all subslots, then return a list of their values
+    var inputs = this.context.inputs,
+        ans;
+    if (multiSlot.bindingID) {
+        if (this.isCatchingErrors) {
+            try {
+                ans = this.context.variables.getVar(multiSlot.bindingID);
+            } catch (error) {
+                this.handleError(error, multiSlot);
+            }
+        } else {
+            ans = this.context.variables.getVar(multiSlot.bindingID);
+        }
+        this.returnValueToParentContext(ans);
+        this.popContext();
+    } else {
+        if (argCount > inputs.length) {
+            this.evaluateNextInput(multiSlot);
+        } else {
+	    var dict = new Dict();
+	    for(var index = 0; index < inputs.length; index += 2) {
+		dict.put(inputs[index], inputs[index+1]);
+	    }
+            this.returnValueToParentContext(dict);
+            this.popContext();
+        }
+    }
+};
+Process.prototype.evaluateContext = function () {
+    var exp = this.context.expression;
+    this.frameCount += 1;
+    if (this.context.tag === 'exit') {
+        this.expectReport();
+    }
+    if (exp instanceof Array) {
+        return this.evaluateSequence(exp);
+    }
+    if (exp instanceof MultiArgMorph) {
+	if (exp instanceof DictArgMorph) {
+	    return this.evaluateDictSlot(exp, exp.inputs().length);
+	}
+        return this.evaluateMultiSlot(exp, exp.inputs().length);
+    }
+    if (exp instanceof ArgLabelMorph) {
+        return this.evaluateArgLabel(exp);
+    }
+    if (exp instanceof ArgMorph || exp.bindingID) {
+        return this.evaluateInput(exp);
+    }
+    if (exp instanceof BlockMorph) {
+        return this.evaluateBlock(exp, exp.inputs().length);
+    }
+    if (isString(exp)) {
+        return this[exp].apply(this, this.context.inputs);
+    }
+    this.popContext(); // default: just ignore it
+};
