@@ -32,7 +32,17 @@
       window.onload = function () {
           world = new WorldMorph(document.getElementById('world'));
           world.worldCanvas.focus();
-          new IDE_Morph().openIn(world);
+          var ide = new IDE_Morph();
+	  ide.openIn(world);
+	  if (String(window.location).indexOf('tools=true') >= 0 &&
+	      location.protocol !== 'file:') {// like snap.berkley.edu/init
+	      ide.getURL(
+                  ide.resourceURL('libraries', 'tools.xml'),
+                  function (txt) {
+                      ide.droppedText(txt, 'tools');
+                  }
+              );
+	  }
           world.isDevMode = true;// enable dev mode - for until I finish
           loop();
       };
