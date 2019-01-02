@@ -79,6 +79,10 @@ Process.prototype.doReplaceDictValue = function(key, dict, value) {
     this.assertType(dict, 'dict');
     dict.put(key, value);
 };
+Process.prototype.doRemoveDictPair = function(key, dict) {
+    this.assertType(dict, 'dict');
+    dict.remove(key);
+};
 Process.prototype.reportPairsCount = function(dict) {
     this.assertType(dict, 'dict');
     return dict.length();

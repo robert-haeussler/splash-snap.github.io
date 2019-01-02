@@ -112,7 +112,7 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data, toggle) {
         }
         contents.setWidth(width);
     } else if (!(data instanceof List)) {
-        // scale contents image
+        // scalecontents image
         scaledImg = newCanvas(contents.extent().multiplyBy(this.scale));
         scaledImg.getContext('2d').drawImage(
 	    contents.image,
@@ -1163,10 +1163,16 @@ SpriteMorph.prototype.initBlocks = function () {
 	    spec: 'replace value at %s of %l with %s',
 	    defaults: [localize('key'), null, localize('val')]
 	},
+	doRemoveDictPair: {
+	    type: 'command',
+	    category: 'lists',
+	    spec: 'remove pair with key %s from %l',
+	    defaults: [localize('key')]
+	},
 	reportDictPairsCount: {
 	    type: 'reporter',
 	    category: 'lists',
-	    spec: 'number of pairs in %l',
+	    spec: 'number of pairs in %l'
 	},
 	reportDictKeys: {
 	    type: 'reporter',
@@ -1731,6 +1737,7 @@ SpriteMorph.prototype.blockTemplates = function (category) {
 	blocks.push(block('reportDictValue'));
 	blocks.push(block('reportDictPairsCount'));
 	blocks.push(block('doReplaceDictValue'));
+	blocks.push(block('doRemoveDictPair'));
 	blocks.push('-');
 	blocks.push(block('reportDictKeys'));
 	blocks.push(block('reportDictValues'));
@@ -2177,6 +2184,7 @@ StageMorph.prototype.blockTemplates = function (category) {
 	blocks.push(block('reportDictValue'));
 	blocks.push(block('reportDictPairsCount'));
 	blocks.push(block('doReplaceDictValue'));
+	blocks.push(block('doRemoveDictPair'));
 	blocks.push('-');
 	blocks.push(block('reportDictKeys'));
 	blocks.push(block('reportDictValues'));
