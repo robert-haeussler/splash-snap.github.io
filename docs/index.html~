@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Splash - documentation</title>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+  </head>
+  <body>
+    <div id="nav">
+      <ul class="nav">
+	<li class="nav"><a class="nav" href="..">Home</a></li>
+	<li class="nav"><a class="nav" href="../editor">Create</a></li>
+	<li class="nav"><a class="activenav" href="#">Docs</a></li>
+	<li class="nav"><a class="nav" href="https://github.com/splash-snap/splash-snap.github.io">Github</a></li>
+	<li class="contents"><a class="nav" href="#case-sensing">Case Sensing</a></li>
+	<li class="contents"><a class="nav" href="#looping">Looping</a></li>
+	<li class="contents"><a class="nav" href="#mutation">Mutation</a></li>
+	<li class="contents"><a class="nav" href="#access">Access</a></li>
+	<li class="contents"><a class="nav" href="#constructers">Constucters</a></li>
+      </ul>
+    </div>
+    <br>
+    <h1 class="center">Splash - Documentation</h1>
+    <div id="constructers">
+      <h3 class="center">Constructers</h3>
+      Currently the only way to create dicts is with the <img src="dictConstructer.png" alt="(dict [    ] [])"/> block. The first input is for the key and the second for the value. The arrows always add or remove a pair each time. Keys must always be strings.
+    </div>
+    <br>
+    <div id="access">
+      <h3 class="center">Access</h3>
+      A dict can be read from with the <img src="readValue.png" alt="(value at [key] of [=])"/> block. It always converts from the key to te value. The <img src="pairsCount.png" alt="(number of pairs in [=])"/> block is not used for much, but it is there for completion.
+    </div>
+    <br>
+    <div id="mutation">
+      <h3 class="center">Mutation</h3>
+      There are two functions to modify dicts. <img src="replaceValue.png" alt="{replace value at [key] of [=] with [val]}"/> adds a pair or replaces a value, while <img src="removePair.png" alt="{remove pair with key [key] from [=]}"/> removes a pair.
+    </div>
+    <br>
+    <div id="looping">
+      <h3 class="center">Looping</h3>
+      With the blocks above, there is no way to find what keys it has, only how many and what values are related to each one. That is fixed by the <img src="keys.png" alt="(keys of [=])"/> block. A dict can be looped through with <img src="loopInDict.png" alt="{for ((each item)) in (keys of [=]) }"/> The <img src="values.png" alt="(value of [=])"/> block can be recreated with <img src="findValues.png" alt="script variables ((result))<br>set [result v] to (list)<br>for ((each item)) in (keys of [=])<br>    add (value at (each item) of [=]) to (result)<br>report (result)"/>
+    </div>
+    <br>
+    <div id="case-sensing">
+      <h3 class="center">Case Sensing</h3>
+      Dict keys are case sensitive. This means that you can define a case sensitive equals block: <img src="caseSensitive.png" alt="<(dict (#1) []) = (dict (#2) [])>"/>
+    </div>
+  </body>
+</html>

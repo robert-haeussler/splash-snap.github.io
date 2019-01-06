@@ -1,20 +1,62 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
   <head>
-    <title>space-elephant github pages</title>
+    <title>Splash - a Snap! mod</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico"/>
   </head>
   <body>
-    <h1>space-elephant github pages</h1>
+    <nav id="nav">
+      <ul class="nav">
+	<li class="nav"><a class="activenav" href="#">Home</a></li>
+	<li class="nav"><a class="nav" href="./editor">Create</a></li>
+	<li class="nav"><a class="nav" href="./docs">Docs</a></li>
+	<li class="nav"><a class="nav" href="https://github.com/splash-snap/splash-snap.github.io">Github</a></li>
+	<li class="contents"><a class="nav" href="#cloud-variable-limitations">Cloud Variable Limitations</a></li>
+      </ul>
+    </nav>
     <br>
-    <ul>
-      <li>
-	<a href="Snap/snap.html">Snap<i>!</i> with dictonaries</a>
-	<ul style="list-style-type:circle">
-	  <li>
-	    <a href="Snap/snap.html#open:https://snap.berkeley.edu/snapsource/tools.xml">with tools loaded</a>
+    <div id="main">
+      <h1>Splash</h1>
+      <div class="center">
+	<img src="splash.png" alt="splash image"/>
+      </div>
+      <h2>What is Splash?</h2>
+      <p>
+	Splash is a mod for <a href="https://snap.berkely.edu/">Snap<i>!</i></a>
+	Currently its only addition is first class dictionaries.<br>
+	I plan to add
+	<ul>
+	  <li><a href="https://en.scratch-wiki.info/wiki/Sound_Effect">sound effect blocks</a></li>
+	  <li><a href="https://en.scratch-wiki.info/wiki/Cloud_Data">cloud variables</a> with <a href="#cloud-variable-limitations">less limitations</a><ul class="sublist">
+	      <li><a href="https://scratch.mit.edu/discuss/topic/10153/">bridge variables</a></li>
+	      <li><a href="https://scratch.mit.edu/discuss/topic/317138/">ship variables</a></li>
+	    </ul>
 	  </li>
+	  <li><a href="https://scratch.mit.edu/discuss/topic/33704/">cookie variables</a></li>
+	  <li>Native <a href="http://json.org">JSON</a> support</li>
 	</ul>
-      </li>
-    </ul>
+      </p>      
+      <br>
+      <br>
+      <br>
+      <ul>
+	<li>make a project at <a href="./editor/snap.html">/editor/</a></li>
+	<li>read the documentation at <a href="./docs/">/docs/</a></li>
+	<li>get the code at <a href="https://github.com/splash-snap/splash-snap.github.io">https://github.com/splash-snap/splash-snap.github.io</a></li>
+      </ul>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div id="cloud-variable-limitations">
+      <h2>Cloud Variable Limitations</h2>
+      <div class="justify">
+	As in scratch, I will not allow arbitrary types in cloud variables. I don't want my server to need to be able to store and sprites that only make any sense in one specific client. I will support booleans, and convert all other types to strings, to avoid compatibility problems between big numbers like 1+2i and users without bignums enabled. Lists, dicts and sprites will not be supported because they are not atomic, and rings because I don't have a format for them on the server. There will be no character limit, meaning that you may encode your data.
+      </div>
+    </div>
   </body>
 </html>

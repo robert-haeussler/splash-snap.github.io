@@ -1,0 +1,72 @@
+body {
+    font-family: sans-serif;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABCAIAAAB2XpiaAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH4wEGBiYbCTmDmgAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAVSURBVAjXYzQ3N5eWlv769Ss3NzcAGFYD+HxsVekAAAAASUVORK5CYII=);
+    color: #e0e0e0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: white;
+    text-align: center;
+}
+
+.center {
+    text-align: center;
+}
+
+.justify {
+    text-align: justify;
+}
+.sublist {
+    list-style-type: circle;
+}
+
+a {
+    text-decoration: none;
+    color: #b7cdd9
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ul.nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+li.nav {
+    float: left;
+}
+
+li.contents {
+    float: right;
+}
+
+a.nav {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the nav link color to #111 (black) on hover */
+a.nav:hover {
+    background-color: #111;
+    text-decoration: none;
+}
+
+a.activenav {
+    background-color: #4CAF50;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
