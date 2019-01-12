@@ -20,29 +20,29 @@
 	<li class="contents"><a class="nav" href="#constructers">Constucters</a></li>
       </ul>
     </nav>
-    <br>
+    <br/>
     <h1>Splash - Documentation</h1>
     <div id="constructers">
       <h2>Dictionaries</h2>
       <h3>Constructers</h3>
       Currently the only way to create dicts is with the <img src="dictConstructer.png" alt="(dict [    ] [])"/> block. The first input is for the key and the second for the value. The arrows always add or remove a pair each time. Keys must always be strings.
     </div>
-    <br>
+    <br/>
     <div id="access">
       <h3>Access</h3>
       A dict can be read from with the <img src="readValue.png" alt="(value at [key] of [=])"/> block. It always converts from the key to te value. The <img src="pairsCount.png" alt="(number of pairs in [=])"/> block is not used for much, but it is there for completion.
     </div>
-    <br>
+    <br/>
     <div id="mutation">
       <h3>Mutation</h3>
       There are two functions to modify dicts. <img src="replaceValue.png" alt="{replace value at [key] of [=] with [val]}"/> adds a pair or replaces a value, while <img src="removePair.png" alt="{remove pair with key [key] from [=]}"/> removes a pair.
     </div>
-    <br>
+    <br/>
     <div id="looping">
       <h3>Looping</h3>
       With the blocks above, there is no way to find what keys it has, only how many and what values are related to each one. That is fixed by the <img src="keys.png" alt="(keys of [=])"/> block. A dict can be looped through with <img src="loopInDict.png" alt="{for ((each item)) in (keys of [=]) }"/> The <img src="values.png" alt="(value of [=])"/> block can be recreated with <img src="findValues.png" alt="(map((value at (key) of [=])) input names: ((key)) over (keys of [=]))"/>
     </div>
-    <br>
+    <br/>
     <div id="case-sensing">
       <h3>Case Sensing</h3>
       Dict keys are case sensitive. This means that you can define a case sensitive equals block: <img src="caseSensitive.png" alt="<(dict (#1) []) = (dict (#2) [])>"/>

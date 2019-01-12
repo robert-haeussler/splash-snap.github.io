@@ -1,5 +1,5 @@
 body {
-    font-family: sans-serif;
+    font-family: Impact, Arial;
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABCAIAAAB2XpiaAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH4wEGBiYbCTmDmgAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAVSURBVAjXYzQ3N5eWlv769Ss3NzcAGFYD+HxsVekAAAAASUVORK5CYII=);
     color: #e0e0e0;
 }
@@ -7,6 +7,14 @@ body {
 h1, h2, h3, h4, h5, h6 {
     color: white;
     text-align: center;
+}
+
+ul {
+    color: white;
+}
+
+li {
+    color: #e0e0e0;
 }
 
 .center {

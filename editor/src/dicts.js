@@ -10,9 +10,9 @@ modules.dicts = '2018-December-22';
 */
 
 function Dict(obj) {
-    this.contents = new Object(obj);
+    this.contents = obj;
     this.lastChanged = Date.now();
-};
+}
 
 Dict.prototype.changed = function () {
     this.lastChanged = Date.now();

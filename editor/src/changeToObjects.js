@@ -1210,6 +1210,19 @@ SpriteMorph.prototype.initBlocks = function () {
             spec: 'show table %l'
         },
 
+	// JSON - extended to allow for sprites and rings
+	
+	reportParseJson: {
+	    type: 'reporter',
+	    category: 'other',
+	    spec: 'parse json %s'
+	},
+	reportCreateJson: {
+	    type: 'reporter',
+	    category: 'other',
+	    spec: 'create json for %s'
+	},
+	
         // Code mapping - experimental
         doMapCodeOrHeader: { // experimental
             type: 'command',
@@ -1759,7 +1772,10 @@ SpriteMorph.prototype.blockTemplates = function (category) {
             blocks.push(block('doShowTable'));
         }
 
-    /////////////////////////////////
+	// JSON /////////////////////////
+	blocks.push('=');
+	blocks.push(block('reportParseJson'));
+	blocks.push(block('reportCreateJson'));
 
         blocks.push('=');
 
@@ -2206,7 +2222,10 @@ StageMorph.prototype.blockTemplates = function (category) {
             blocks.push(block('doShowTable'));
         }
 
-    /////////////////////////////////
+	// JSON /////////////////////////
+	blocks.push('=');
+	blocks.push(block('reportParseJson'));
+	blocks.push(block('reportCreateJson'));
 
         blocks.push('=');
 

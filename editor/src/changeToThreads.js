@@ -87,11 +87,18 @@ Process.prototype.reportPairsCount = function(dict) {
     this.assertType(dict, 'dict');
     return dict.length();
 };
-Process.prototype.reportDictKeys = function(dict) {
+Process.prototype.reportDictKeys = function(dict) {// this is builtin to list
     this.assertType(dict, 'dict');
-    var keys = dict.keys();
-    var list = new List(keys);
-    return list;
+    var list = new List();
+    list.isSet = true;
+    var object = {};
+    for (key in dict.contents) {
+	if (object.contents.hasOwnProperty(key)) {
+	    object[key] = null;// we don't need the values.
+	}
+    }
+    list.dict = new Dict(object);
+    return list
 };
 Process.prototype.reportDictValues = function(dict) {
     this.assertType(dict, 'dict');
@@ -156,4 +163,95 @@ Process.prototype.evaluateContext = function () {
         return this[exp].apply(this, this.context.inputs);
     }
     this.popContext(); // default: just ignore it
+};
+
+Process.prototype.reportMap = function (reporter, list) {
+    // answer a new list containing the results of the reporter applied
+    // to each value of the given list. Distinguish between linked and
+    // arrayed lists.
+    // Note: This method utilizes the current context's inputs array to
+    // manage temporary variables, whose allocation to which slot are
+    // documented in each of the variants' code (linked or arrayed) below
+
+    var next;
+    if (list.isLinked) {
+        // this.context.inputs:
+        // [0] - reporter
+        // [1] - list (original source)
+        // -----------------------------
+        // [2] - result list (target)
+        // [3] - currently last element of result list
+        // [4] - current source list (what's left to map)
+        // [5] - current value of last function call
+
+        if (this.context.inputs.length < 3) {
+            this.context.addInput(new List());
+            this.context.inputs[2].isLinked = true;
+            this.context.addInput(this.context.inputs[2]);
+            this.context.addInput(list);
+        }
+        if (this.context.inputs[4].length() === 0) {
+            this.context.inputs[3].rest = list.cons(this.context.inputs[5]);
+            this.returnValueToParentContext(this.context.inputs[2].cdr());
+            return;
+        }
+        if (this.context.inputs.length > 5) {
+            this.context.inputs[3].rest = list.cons(this.context.inputs[5]);
+            this.context.inputs[3] = this.context.inputs[3].rest;
+            this.context.inputs.splice(5);
+        }
+        next = this.context.inputs[4].at(1);
+        this.context.inputs[4] = this.context.inputs[4].cdr();
+        this.pushContext();
+        this.evaluate(reporter, new List([next]));
+    } else { // arrayed
+        // this.context.inputs:
+        // [0] - reporter
+        // [1] - list (original source)
+        // -----------------------------
+        // [2..n] - result values (target)
+
+	if (list.isSet) list.becomeArray();
+	
+        if (this.context.inputs.length - 2 === list.length()) {
+            this.returnValueToParentContext(
+                new List(this.context.inputs.slice(2))
+            );
+            return;
+        }
+        next = list.at(this.context.inputs.length - 1);
+        this.pushContext();
+        this.evaluate(reporter, new List([next]));
+    }
+};
+
+Process.prototype.doForEach = function (upvar, list, script) {
+    // perform a script for each element of a list, assigning the
+    // current iteration's element to a variable with the name
+    // specified in the "upvar" parameter, so it can be referenced
+    // within the script. Uses the context's - unused - fourth
+    // element as temporary storage for the current list index
+    if (list.isLinked) {
+	this.context.outerContext.variables.addVar(upvar);
+	this.context.outerContext.variables.setVar(
+            upvar,
+            list.first
+	);
+	this.pushContext('doYield');
+	this.pushContext();
+	return;
+    }
+    if (list.isSet) list.becomeArray();
+    if (isNil(this.context.inputs[3])) {this.context.inputs[3] = 1; }
+    var index = this.context.inputs[3];
+    this.context.outerContext.variables.addVar(upvar);
+    this.context.outerContext.variables.setVar(
+        upvar,
+        list.at(index)
+    );
+    if (index > list.length()) {return; }
+    this.context.inputs[3] += 1;
+    this.pushContext('doYield');
+    this.pushContext();
+    this.evaluate(script, new List(), true);
 };
