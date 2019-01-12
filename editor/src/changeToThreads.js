@@ -255,3 +255,47 @@ Process.prototype.doForEach = function (upvar, list, script) {
     this.pushContext();
     this.evaluate(script, new List(), true);
 };
+
+Process.prototype.reportParseJson = function (string) {
+    function asSnapTypes(js) {
+	if (typeof js === 'object') {
+	    if (object instanceof Array) {
+		return new List(js.map(asSnapTypes));
+	    }
+	    // it is an object
+	    var key;
+	    var result = new Dict();
+	    for (key in js) {
+		if (js.hasOwnProperty(key)){
+		    result.put(key, asSnapTypes(js[key]));
+		}
+	    }
+	    return result;
+	}
+	return js;
+    }
+    return asSnapTypes(JSON.parse(string));
+};
+
+Process.prototype.reportCreateJson = function (json) {
+    function asJsTypes(snap) {
+	if (typeof js === 'object') {
+	    if (object instanceof List) {
+		return snap.asArray().map(asSnapTypes);
+	    }
+	    if (object instanceof Dict) {
+		var key;
+		var result = {};
+		for (key in snap.contents) {
+		    if (snap.contents.hasOwnProperty(key)) {
+			result[key] = asJsTypes(snap.at(key));
+		    }
+		}
+		return result;
+	    }
+	    throw new Error('expecting dict or list but getting ' +
+			    this.reportTypeOf(snap));
+	}
+	return js === undefined ? null : js;
+    }
+};
