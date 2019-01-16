@@ -25,14 +25,14 @@ Dict.prototype.asString = function () {
 Dict.prototype.length = function() {
     var length = 0;
     for (key in this.contents) {
-	if (this.contents.hasOwnProperty(key)) {
+	if (Object.prototype.hasOwnProperty.call(this.contents, key)) {
 	    length ++;
 	}
     }
 };
 
 Dict.prototype.at = function(key) {
-    if (this.contents.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(this.contents, key)) {
 	return this.contents[key];
     } else {
 	throw new Error('key "' + key + '" not in dict.')
@@ -41,7 +41,7 @@ Dict.prototype.at = function(key) {
 
 Dict.prototype.put = function(key, value) {
     if (value === undefined) value = null;
-    if (!this.contents.hasOwnProperty(key) || this.contents[key] !== value) {
+    if (!Object.prototype.hasOwnProperty.call(this.contents, key) || this.contents[key] !== value) {
 	this.contents[key] = value;
 	this.changed();
     }
@@ -57,7 +57,7 @@ Dict.prototype.remove = function(key) {
 Dict.prototype.keys = function() {
     var keys = [];
     for (key in this.contents) {
-	if (this.contents.hasOwnProperty(key)) {
+	if (Object.prototype.hasOwnProperty.call(this.contents, key)) {
 	    keys.push(key);
 	}
     }
@@ -67,7 +67,7 @@ Dict.prototype.keys = function() {
 Dict.prototype.values = function() {
     var values = [];
     for (key in this.contents) {
-	if (this.contents.hasOwnProperty(key)) {
+	if (Object.prototype.hasOwnProperty.call(this.contents, key)) {
 	    values.push(this.contents[key]);
 	}
     }

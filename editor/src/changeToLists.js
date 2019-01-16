@@ -22,9 +22,9 @@ List = (function(oldList) {// replace the constructer
 	
 	this.lastChanged = Date.now();
     }
-    List.prototype = oldPrototype
+    List.prototype = oldPrototype;
     List.prototype.constructer = List;
-    return List
+    return List;
 })(List)
 
 List.prototype.length = function () {
@@ -54,7 +54,7 @@ List.prototype.at = function (index) {
     }
     if (this.isSet) {
 	for (value in this.dict.contents) {
-	    if (this.dict.contents.hasOwnProperty(value)) {
+	    if (Object.prototype.hasOwnProperty.call(this.dict.contents, value)) {
 		if (idx <= 1) {
 		    return value;
 		}
@@ -75,7 +75,8 @@ List.prototype.contains = function (element) {
         pair = pair.rest;
     }
     if (this.isSet) {
-	return this.dict.contents.hasOwnProperty(element);
+	return Object.prototype.hasOwnProperty.call(this.dict.contents,
+						    element);
     }
     // in case I'm arrayed
     return pair.contents.some(function (any) {
@@ -95,9 +96,17 @@ List.prototype.itemsArray = function () {
             next = next.rest;
         }
         if (next) {
-            for (i = 1; i <= next.contents.length; i += 1) {
-                result.push(next.at(i));
-            }
+	    if (next.isSet) {
+		for (i in next.dict.contents) {
+		    if (Object.hasOwnProperty.call(next.dict.contents, i)) {
+			result.push(i);
+		    }
+		}
+	    } else {
+		for (i = 1; i <= next.contents.length; i += 1) {
+                    result.push(next.at(i));
+		}
+	    }
         }
         return result;
     }

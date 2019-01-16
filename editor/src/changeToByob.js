@@ -211,3 +211,38 @@ WorldMorph.prototype.customMorphs = function () {
 	new DictTableDialogMorph()
     ];
 };
+
+VariableDialogMorph.prototype.createTypeButtons = function () {
+    var myself = this;
+
+    this.addTypeButton(
+        function () {myself.setType('cookie'); },
+        "for all sessions and tabs",
+        function () {return myself.isCookie; }
+    );
+    this.addTypeButton(
+        function () {myself.setType('global'); },
+        "for all sprites",
+        function () {return myself.isGlobal && !myself.isCookie; }
+    );
+    this.addTypeButton(
+        function () {myself.setType('local'); },
+        "for this sprite only",
+        function () {return !myself.isGlobal && !myself.isCookie; }
+    );
+};
+
+VariableDialogMorph.prototype.setType = function (varType) {
+    this.isGlobal = (varType === 'global');
+    this.isCookie = (varType === 'cookie')
+    this.types.children.forEach(function (c) {
+        c.refresh();
+    });
+    this.edit();
+};
+
+VariableDialogMorph.prototype.getInput = function () {
+    // answer a tuple: [varName, isGlobal, isCookie]
+    var name = this.normalizeSpaces(this.body.getValue());
+    return name ? [name, this.isGlobal, this.isCookie] : null;
+};

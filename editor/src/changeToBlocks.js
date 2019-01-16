@@ -977,3 +977,73 @@ InputSlotMorph.prototype.typesMenu = function () {
     dict.dict = ['dict'];
     return dict;
 };
+
+ReporterBlockMorph.prototype.drawNew = function () {
+    var context;
+    this.cachedClr = this.color.toString();
+    this.cachedClrBright = this.bright();
+    this.cachedClrDark = this.dark();
+    this.image = newCanvas(this.extent());
+    context = this.image.getContext('2d');
+    context.fillStyle = this.cachedClr;
+
+    if (this.isPredicate) {
+        this.drawDiamond(context);
+    } else {
+        this.drawRounded(context);
+    }
+
+    // draw location pin icon if applicable
+    if (this.hasLocationPin()) {
+        this.drawMethodIcon(context);
+    } else if (this.isCookieVar) {
+	this.drawCookieIcon(context);
+    }
+
+    // erase CommandSlots
+    this.eraseHoles(context);
+};
+
+ReporterBlockMorph.prototype.drawCookieIcon = function (context) {
+    var ext = this.methodIconExtent(),
+        w = ext.x,
+        h = ext.y,
+        r = w / 2,
+        x = this.edge + this.labelPadding,
+        y = this.edge,
+        isNormal =
+            this.color === SpriteMorph.prototype.blockColor[this.category];
+
+    if (this.isPredicate) {//should be false, this is for variables
+        x = this.rounding;
+    }
+    if (this instanceof CommandBlockMorph) {
+        y += this.corner;
+    }
+    context.fillStyle = '#D5944B';
+    context.strokeStyle = '#000000';
+    context.beginPath();
+    context.arc(x + r, y + (r + h)/2, r * 2,
+		radians(-90), radians(180));
+    context.arc(x + r*3/2, y + (r + h)/2, r/2, radians(0), radians(90));
+    context.arc(x + r, y + r + h/2, r/2, radians(0), radians(90));
+    context.closePath();
+    context.fill();
+    context.stroke();
+    
+/*
+    // pin
+    context.beginPath();
+    context.arc(x + r, y + r, r, radians(-210), radians(30), false);
+    context.lineTo(x + r, y + h);
+    context.closePath();
+    context.fill();
+
+    // hole
+    context.fillStyle = this.cachedClr;
+    context.beginPath();
+    context.arc(x + r, y + r, r * 0.4, radians(0), radians(360), false);
+    context.closePath();
+    context.fill();
+*/
+};

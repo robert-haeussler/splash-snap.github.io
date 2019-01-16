@@ -93,7 +93,7 @@ Process.prototype.reportDictKeys = function(dict) {// this is builtin to list
     list.isSet = true;
     var object = {};
     for (key in dict.contents) {
-	if (object.contents.hasOwnProperty(key)) {
+	if (Object.hasOwnProperty.call(object.contents, key)) {
 	    object[key] = null;// we don't need the values.
 	}
     }

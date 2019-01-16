@@ -1273,8 +1273,9 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         return newBlock;
     }
 
-    function variableBlock(varName, isLocal) {
-        var newBlock = SpriteMorph.prototype.variableBlock(varName, isLocal);
+    function variableBlock(varName, isLocal, isCookie) {
+        var newBlock = SpriteMorph.prototype.variableBlock(varName, isLocal,
+							   isCookie);
         newBlock.isDraggable = false;
         newBlock.isTemplate = true;
         if (contains(inheritedVars, varName)) {
@@ -1330,13 +1331,13 @@ SpriteMorph.prototype.blockTemplates = function (category) {
     function addVar(pair) {
         var ide;
         if (pair) {
-            if (myself.isVariableNameInUse(pair[0], pair[1])) {
+            if (myself.isVariableNameInUse(pair[0], pair[1], pair[2])) {
                 myself.inform('that name is already in use');
             } else {
                 ide = myself.parentThatIsA(IDE_Morph);
-                myself.addVariable(pair[0], pair[1]);
+                myself.addVariable(pair[0], pair[1], pair[2]);
                 if (!myself.showingVariableWatcher(pair[0])) {
-                    myself.toggleVariableWatcher(pair[0], pair[1]);
+                    myself.toggleVariableWatcher(pair[0], pair[1], pair[2]);
                 }
                 ide.flushBlocksCache('variables'); // b/c of inheritance
                 ide.refreshPalette();
@@ -2496,4 +2497,27 @@ CellMorph.prototype.mouseDoubleClick = function (pos) {
     } else {
         this.escalateEvent('mouseDoubleClick', pos);
     }
+};
+SpriteMorph.prototype.variableBlock = function (varName, isLocalTemplate,
+						isCookie) {
+    var block = new ReporterBlockMorph(false);
+    block.selector = 'reportGetVar';
+    block.color = this.blockColor.variables;
+    block.category = 'variables';
+    block.isLocalVarTemplate = isLocalTemplate;
+    block.isCookieVar = isCookie;
+    block.setSpec(varName);
+    block.isDraggable = true;
+    return block;
+};
+SpriteMorph.prototype.isVariableNameInUse = function (vName, isGlobal, isCookie)
+{
+    if (isCookie) {
+	return contains(this.parentThatIsA(IDE_Morph).cookieVars, vName);
+    }
+    if (isGlobal) {
+        return contains(this.variables.allNames(), vName);
+    }
+    if (contains(this.variables.names(), vName)) {return true; }
+    return contains(this.globalVariables().names(), vName);
 };

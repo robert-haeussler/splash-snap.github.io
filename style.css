@@ -17,8 +17,27 @@ li {
     color: #e0e0e0;
 }
 
+button {
+  background-color: #333;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+button:hover {
+    background-color: #111;
+}
+
 .center {
     text-align: center;
+}
+
+.right {
+    text-align: right;
 }
 
 .justify {
@@ -28,13 +47,21 @@ li {
     list-style-type: circle;
 }
 
-a {
+a:link {
     text-decoration: none;
     color: #b7cdd9
 }
 
 a:hover {
     text-decoration: underline;
+}
+
+a:visited {
+    color: #ca8afa;
+}
+
+a:active {
+    color: yellow;
 }
 
 ul.nav {
