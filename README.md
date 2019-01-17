@@ -13,6 +13,9 @@ In progress there are
 The online site is at [splash-snap.github.io](splash-snap.github.io)
 
 The /server/ directory is for code related to the server. It is writen in java.
+
+## Contributers
+* [@robert-haeussler]()
 <!-- 
     for the next contributer, add a `## Contributers', and remove this comment. Then do the following:
 
