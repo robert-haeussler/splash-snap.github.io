@@ -1,5 +1,5 @@
 # splash-snap.github.io
-Splash is a [Snap*!*](snap.berkeley.edu) mod created by [@space-elephant](https://github.com/space-elephant) containing
+Splash is a [Snap<i>!</i>](snap.berkeley.edu) mod created by [@space-elephant](https://github.com/space-elephant) containing
 * First class dictionarries
 * Native [JSON](http://json.org) support
 
