@@ -8,9 +8,20 @@ All files in / should be sent on receiving a GET request for them.
 /api/http/ and /api/socket/ are special directories. they are used in the following ways:
 
 /api/http/*projectCreatorUsername*/*projectName*/*variableName*/
-	return the current value of the var
+	return, or set the current value of the var
 
 /api/socket/*projectCreatorUsername*/*projectName*/*variableName*/
 	open a websocket connection with the client. If the client is from the current domain, allow them to set the vars. Otherwise, only send them changes and ignore their input.
 
 /api/restart/ is also a special directory: It tells the server to load a change from github
+
+## Vote
+
+/votes.js is a dynamic file. GET will send a js file:
+
+```js
+var snap = Snap votes;
+var splash = Splash votes;
+```
+
+and POST will take a boolean (`0` or `1`) and add it to Snap<i>!</i> or Splash counts.

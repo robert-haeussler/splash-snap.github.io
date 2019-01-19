@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Splash vs. Snap!</title>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
+    <link rel="icon" type="image/vnd.microsoft.icon" href="../favicon.ico"/>
+    <script type="text/javascript" src="../votes.js" onload="document.getElementById('finish').src='choose.js'"/>
+    <script type="text/javascript" id="finish" onload="setup()"/>
+  </head>
+  <body>
+    <nav>
+      <ul class="nav">
+	<li class="nav"><a class="activenav" href="#">Home</a></li>
+	<li class="nav"><a class="nav" href="./editor/snap.html">Create</a></li>
+	<li class="nav"><a class="nav" href="./docs">Docs</a></li>
+	<li class="nav"><a class="nav" href="https://github.com/splash-snap/splash-snap.github.io">Github</a></li>
+        <li class="nav"><a class="nav" href="./about.html">About</a></li>
+	<li class="contents"><a class="nav" href="#cloud-variable-limitations">Cloud Variable Limitations</a></li>
+      </ul>
+    </nav>
+    <br/>
+    <h1 style="color: red" id="noJs">You need javascript to vote about splash</h1>
+    <div id="main" style="display:none">
+      <h1>Splash vs. Snap<i>!</i></h1>
+      <br/>
+      <br/>
+      <button type="button" onclick="choose(true)" id="splash">Splash</button>
+      <!-- &#x20; is space, same as &#32; -->
+      &#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;
+      &#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;
+      <button type="button" onclick="choose(false)" id="snap">Snap<i>!</i></button>
+    </div>
+    <div id="result">
+      <h1 id="success"/>
+      <br/>
+      <h1 id="precent"/>
+    </div>
+  </body>
+</html>
