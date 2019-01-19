@@ -10,7 +10,7 @@ All files in / should be sent on receiving a GET request for them.
 /api/http/*projectCreatorUsername*/*projectName*/*variableName*/
 	return, or set the current value of the var
 
-/api/socket/*projectCreatorUsername*/*projectName*/*variableName*/
+/api/socket/*projectCreatorUsername*/*projectName*/
 	open a websocket connection with the client. If the client is from the current domain, allow them to set the vars. Otherwise, only send them changes and ignore their input.
 
 /api/restart/ is also a special directory: It tells the server to load a change from github
