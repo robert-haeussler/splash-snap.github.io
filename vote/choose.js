@@ -24,8 +24,9 @@ function choose(isSplash) {
     var cookie = getCookie('choice');
     var success = document.getElementById('success');
     if (cookie === '') {
-	setCookie('choice', isSplash ? 'splash' : 'snap', 365 * 20);
-	success.innerHTML = 'You chose ' + (isSplash ? 'splash' : 'snap') + '.';
+	setCookie('choice', isSplash ? 'Splash' : 'Snap<i>!</i>', 365 * 20);
+	success.innerHTML = 'You chose ' + (isSplash ? 'Splash' :
+					    'Snap<i>!</i>') + '.';
 	showPrecent(isSplash);
     } else {
 	success.innerHTML = 'You have already voted.';
@@ -34,14 +35,16 @@ function choose(isSplash) {
 }
 function showPrecent(isSplash) {
     var precent = document.getElementById('precent');
-    var precentSplash = splash / (splash + snap);
-    var precentSnap = snap / (snap + splash);
     if (isSplash === undefined) {
-	precent.innerHTML = ('' + precentSplash + '% chose Splash.')
+	precent.innerHTML = ('' + splash / (splash + snap) * 100 +
+			     '% chose Splash.')
     } else if (isSplash) {
-	precent.innerHTML = ('' + precentSplash + '% agree with you on Splash.')
+	splash += 1;
+	precent.innerHTML = ('' + splash / (splash + snap) * 100 +
+			     '% agree with you on Splash.')
     } else {
-	precent.innerHTML = ('' + precentSnap +
+	snap += 1;
+	precent.innerHTML = ('' + snap / (snap + splash) * 100 +
 			     '% agree with you on Snap<i>!</i>')
     }
 }
