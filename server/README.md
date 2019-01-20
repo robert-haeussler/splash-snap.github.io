@@ -15,6 +15,8 @@ All files in / should be sent on receiving a GET request for them.
 
 /api/restart/ is also a special directory: It tells the server to load a change from github
 
+/github/ should give a 301 Permanant Redirect, and not a 200 OK
+
 ## Vote
 
 /votes.js is a dynamic file. GET will send a js file:
