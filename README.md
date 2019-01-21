@@ -1,5 +1,5 @@
 # splash-snap.github.io
-Splash is a [Snap*!*](snap.berkeley.edu) mod created by [@space-elephant](https://github.com/space-elephant) containing
+Splash is a [Snap<i>!</i>](snap.berkeley.edu) mod created by [@space-elephant](https://github.com/space-elephant) containing
 * First class dictionarries
 * Native [JSON](http://json.org) support
 
@@ -12,10 +12,12 @@ In progress there are
 
 The online site is at [splash-snap.github.io](splash-snap.github.io)
 
-The /server/ directory is for code related to the server. It is writen in java.
-<!-- 
-    for the next contributer, add a `## Contributers', and remove this comment. Then do the following:
+## Contributers
+* [@space-elephant](https://github.com/space-elephant)
+* [@robert-haeussler](https://github.com/robert-haeussler)
 
+The /server/ directory is for code related to the server. It is writen in java.
+<!--
     for every contributer, add a line like this: `* [@NAME](WEBSITE)'. the name could be a username,
     and the website could be your github profile (`https://github.com/NAME'),
     a snap profile (`https://forum.snap.berkeley.edu/u/NAME'), or any website about yourself.
