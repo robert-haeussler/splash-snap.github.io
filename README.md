@@ -1,4 +1,8 @@
 # splash-snap.github.io
+
+[![GitHub issues](https://img.shields.io/github/issues/splash-snap/splash-snap.github.io.svg)](https://github.com/splash-snap/splash-snap.github.io/issues)
+[![GitHub stars](https://img.shields.io/github/stars/splash-snap/splash-snap.github.io.svg)](https://github.com/splash-snap/splash-snap.github.io/stargazers)
+
 Splash is a [Snap<i>!</i>](snap.berkeley.edu) mod created by [@space-elephant](https://github.com/space-elephant) containing
 * First class dictionarries
 * Native [JSON](http://json.org) support
