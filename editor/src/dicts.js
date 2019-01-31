@@ -1,5 +1,34 @@
 modules.dicts = '2018-December-22';
 
+// first implement hash
+var INT_OVERFLOW = 2 ** 32
+
+Object.prototype.hash = function () {// only equal if identical, so hash is random
+    if (this.hashcode === undefined) {
+	this.hashcode = [
+	    Math.floor(Math.random() * INT_OVERFLOW),
+	    Math.floor(Math.random() * INT_OVERFLOW)
+	];
+    }
+    return this.hashcode;
+};
+
+String.prototype.hash = function() {
+    var top = 0, bottom = 0, i, chr, stepMultiply = 33, small = this.toLowerCase();
+    for (i = 0; i < small.length; i++) {
+	chr = small.charCodeAt(i);
+	top = ((top * stepMutliply) + Math.floor(bottom * stepMutliply / INT_OVERFLOW)) % INT_OVERFLOW
+	bottom = ((bottom * stepMutliply) % INT_OVERFLOW) + chr;
+    }
+    return [top, bottom % INT_OVERFLOW];
+};
+
+Number.prototype.hash = function() {return String(this).hash(); }
+
+Boolean.prototype.hash = function() {return String(this).hash(); }
+
+
+
 // Dict ////////////////////////////////////////////////////////////////
 
 /*

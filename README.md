@@ -16,7 +16,8 @@ The online site is at [splash-snap.github.io](splash-snap.github.io)
 * [@space-elephant](https://github.com/space-elephant)
 * [@robert-haeussler](https://github.com/robert-haeussler)
 
-The /server/ directory is for code related to the server. It is writen in java.
+This will use [splash-snap/clouddata](https://github.com/splash-snap/clouddata) and @splash-clouddata (a public machine account, password=`_splash_clouddata_`)
+
 <!--
     for every contributer, add a line like this: `* [@NAME](WEBSITE)'. the name could be a username,
     and the website could be your github profile (`https://github.com/NAME'),
