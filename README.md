@@ -16,14 +16,4 @@ In progress there are
 
 The online site is at [splash-snap.github.io](splash-snap.github.io)
 
-## Contributers
-* [@space-elephant](https://github.com/space-elephant)
-* [@robert-haeussler](https://github.com/robert-haeussler)
-
-This will use [splash-snap/clouddata](https://github.com/splash-snap/clouddata) and @splash-clouddata (a public machine account, password=`_splash_clouddata_`)
-
-<!--
-    for every contributer, add a line like this: `* [@NAME](WEBSITE)'. the name could be a username,
-    and the website could be your github profile (`https://github.com/NAME'),
-    a snap profile (`https://forum.snap.berkeley.edu/u/NAME'), or any website about yourself.
--->
+This will use [firebase](https://console.firebase.google.com/project/splash-clouddata/overview) to store the cloud variables and sinc the messages.
