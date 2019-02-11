@@ -59,7 +59,15 @@
     <div id="cloud-variable-limitations">
       <h2>Cloud Variable Limitations</h2>
       <div class="justify">
-	As in scratch, I will not allow arbitrary types in cloud variables. I don't want my server to need to be able to store and sprites that only make any sense in one specific client. I will support booleans, and convert all other types to strings, to avoid compatibility problems between big numbers like 1+2i and users without bignums enabled. Lists, dicts and sprites will not be supported because they are not atomic, and rings because I don't have a format for them on the server. There will be no character limit, meaning that you may encode your data.
+	As in scratch, I will not allow arbitrary types in cloud variables. I don't want my server to need to be able to store and sprites that only make any sense in one specific client.
+	I will convert numbers to strings, and support
+	<ul>
+	  <li>Booleans</li>
+	  <li>strings</li>
+	  <li>lists</li>
+	  <li>dictionaries</li>
+	</ul>
+        There will also be a limit of 1MB, and 20 000 dictionary pairs, per variable due to the use of <a href="firebase.google.com">firebase</a> for the variables.
       </div>
     </div>
   </body>
