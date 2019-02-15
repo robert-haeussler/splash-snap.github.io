@@ -14,6 +14,6 @@ In progress there are
   * [ship variables](https://scratch.mit.edu/discuss/topic/317138/)
 * [cookie variables](https://en.wikipedia.org/wiki/HTTP_cookie)
 
-The online site is at [splash-snap.github.io](splash-snap.github.io)
+The online site is at [https://splash-snap.github.io](https://splash-snap.github.io)
 
 This will use [firebase](https://console.firebase.google.com/project/splash-clouddata/overview) to store the cloud variables and sinc the messages.
